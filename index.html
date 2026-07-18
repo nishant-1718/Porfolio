@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nishant Tripathi — Data Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060B1E;
+    --bg-mid: #0B1230;
+    --card: #0D1533;
+    --line: #1C2750;
+    --paper: #E7EEFF;
+    --slate: #8DA0C4;
+    --blue: #3B82F6;
+    --cyan: #4FD8FF;
+    --radius: 6px;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, #14235c 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 20%, #0d1a45 0%, transparent 55%),
+      var(--bg);
+    color:var(--paper);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--cyan); color:var(--bg); }
+  :focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
+
+  /* Fixed 3D sparkle background canvas */
+  #sparkle-bg{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+  }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 32px; }
+
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(6,11,30,0.75);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{ display:flex; align-items:center; justify-content:space-between; height:68px; }
+  .logo{ font-family:var(--mono); font-size:15px; }
+  .logo span{ color:var(--cyan); }
+  .navlinks{ display:flex; gap:28px; font-family:var(--mono); font-size:13px; color:var(--slate); }
+  .navlinks a:hover{ color:var(--paper); }
+  .navlinks .num{ color:var(--cyan); margin-right:6px; }
+  .navbtn{
+    font-family:var(--mono); font-size:13px; padding:8px 16px;
+    border:1px solid var(--cyan); border-radius:var(--radius); color:var(--cyan);
+    transition:background .2s ease, color .2s ease;
+  }
+  .navbtn:hover{ background:var(--cyan); color:var(--bg); }
+
+  /* HERO */
+  .hero{
+    padding:88px 0 80px;
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:40px;
+    align-items:center;
+  }
+  .eyebrow{ font-family:var(--mono); font-size:13px; color:var(--cyan); letter-spacing:0.06em; margin-bottom:18px; }
+  .eyebrow::before{ content:"// "; color:var(--slate); }
+  h1.title{
+    font-family:var(--display); font-weight:700;
+    font-size:clamp(34px, 5vw, 54px); line-height:1.08; letter-spacing:-0.01em;
+    margin-bottom:20px;
+  }
+  h1.title .accent{
+    background:linear-gradient(90deg, var(--cyan), var(--blue));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lede{ color:var(--slate); font-size:17px; max-width:46ch; margin-bottom:32px; }
+  .hero-cta{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn-primary, .btn-ghost{
+    font-family:var(--mono); font-size:14px; padding:13px 22px; border-radius:var(--radius);
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn-primary{ background:linear-gradient(90deg, var(--cyan), var(--blue)); color:#04101f; font-weight:600; }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--paper); }
+  .btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); }
+
+  /* Hero visual: rotating 3D wireframe halo + profile photo */
+  .hero-visual{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    max-width:400px;
+    margin:0 auto;
+  }
+  #hero-3d{ position:absolute; inset:0; }
+  .photo-frame{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:65%; height:65%;
+    border-radius:50%;
+    overflow:hidden;
+    box-shadow: 0 0 0 2px rgba(79,216,255,0.5), 0 0 40px 6px rgba(79,216,255,0.25);
+    background:var(--card);
+  }
+  .photo-frame img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+
+  section{ padding:88px 0; border-top:1px solid var(--line); }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:44px; flex-wrap:wrap; gap:12px; }
+  .section-head h2{ font-family:var(--display); font-size:28px; font-weight:600; }
+  .section-tag{ font-family:var(--mono); font-size:12.5px; color:var(--slate); }
+
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+  .about-grid p{ color:var(--slate); margin-bottom:16px; }
+  .about-grid strong{ color:var(--paper); font-weight:600; }
+  .stat-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; }
+  .stat{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px; }
+  .stat .n{ font-family:var(--display); font-size:30px; color:var(--cyan); font-weight:700; }
+  .stat .l{ font-family:var(--mono); font-size:12px; color:var(--slate); margin-top:4px; }
+
+  .schema{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:13.5px; }
+  .schema thead th{
+    text-align:left; color:var(--slate); font-weight:500; padding:10px 14px;
+    border-bottom:1px solid var(--line); font-size:12px; text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .schema tbody td{ padding:14px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .schema tbody tr:hover{ background:rgba(79,216,255,0.05); }
+  .schema .col-name{ color:var(--paper); font-weight:500; white-space:nowrap; }
+  .schema .col-type{ color:var(--cyan); white-space:nowrap; }
+  .schema .col-desc{ color:var(--slate); font-family:var(--body); font-size:14px; }
+  .bar-wrap{ width:120px; height:5px; background:var(--line); border-radius:3px; overflow:hidden; margin-top:8px; }
+  .bar-fill{ height:100%; background:linear-gradient(90deg, var(--cyan), var(--blue)); border-radius:3px; }
+
+  .projects{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px; padding:26px;
+    display:flex; flex-direction:column; gap:14px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{ border-color:var(--cyan); transform:translateY(-3px); }
+  .card h3{ font-family:var(--display); font-size:19px; font-weight:600; }
+  .card .stack{ font-family:var(--mono); font-size:11px; color:var(--cyan); }
+  .card p.desc{ color:var(--slate); font-size:14.5px; }
+  .card .metric{
+    font-family:var(--mono); font-size:12px; color:var(--cyan);
+    background:rgba(79,216,255,0.08); display:inline-block; padding:4px 10px; border-radius:4px; width:fit-content;
+  }
+  .card svg{ width:100%; height:64px; }
+  .card-link{
+    font-family:var(--mono); font-size:12.5px; color:var(--paper);
+    border-top:1px solid var(--line); padding-top:12px; display:flex; align-items:center; gap:6px;
+  }
+  .card-link:hover{ color:var(--cyan); }
+
+  .timeline{ position:relative; padding-left:28px; }
+  .timeline::before{ content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--line); }
+  .tl-item{ position:relative; padding-bottom:36px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{
+    content:""; position:absolute; left:-28px; top:4px; width:11px; height:11px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--cyan);
+  }
+  .tl-date{ font-family:var(--mono); font-size:12px; color:var(--slate); margin-bottom:4px; }
+  .tl-role{ font-family:var(--display); font-size:18px; font-weight:600; margin-bottom:4px; }
+  .tl-role span{ color:var(--cyan); font-weight:400; font-size:15px; }
+  .tl-desc{ color:var(--slate); font-size:14.5px; max-width:60ch; }
+
+  .contact{ display:grid; grid-template-columns:1.2fr 0.8fr; gap:48px; align-items:start; }
+  .contact h2{ font-family:var(--display); font-size:34px; font-weight:600; max-width:14ch; margin-bottom:16px; }
+  .contact .lede{ margin-bottom:28px; }
+  .contact-list{ display:flex; flex-direction:column; gap:14px; }
+  .contact-list a{
+    font-family:var(--mono); font-size:14px; color:var(--paper); display:flex;
+    justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line);
+    transition:color .2s ease;
+  }
+  .contact-list a:hover{ color:var(--cyan); }
+
+  footer{
+    border-top:1px solid var(--line); padding:28px 0; font-family:var(--mono); font-size:12px;
+    color:var(--slate); display:flex; justify-content:space-between;
+  }
+
+  @media (max-width: 860px){
+    .navlinks{ display:none; }
+    .hero{ grid-template-columns:1fr; padding-top:56px; }
+    .hero-visual{ order:-1; max-width:280px; }
+    .about-grid{ grid-template-columns:1fr; gap:28px; }
+    .projects{ grid-template-columns:1fr; }
+    .contact{ grid-template-columns:1fr; }
+    .schema .col-desc{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="sparkle-bg"></canvas>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">Nishant Kumar Tripathi</div>
+    <div class="navlinks">
+      <a href="#about"><span class="num"></span>About</a>
+      <a href="#skills"><span class="num"></span>Skills</a>
+      <a href="#projects"><span class="num"></span>Projects</a>
+      <a href="#experience"><span class="num"></span>Experience</a>
+    </div>
+    <a href="#contact" class="navbtn">contact →</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" style="border-top:none;">
+    <div>
+      <div class="eyebrow">data analyst / turning tables into decisions</div>
+      <h1 class="title">I find the <span class="accent">signal</span><br>in messy data.</h1>
+      <p class="lede">Nishant Kumar Tripathi — data analyst focused on product and revenue analytics. I build the queries, dashboards, and models that teams actually use to make calls.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View projects →</a>
+        <a href="#contact" class="btn-ghost">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div id="hero-3d"></div>
+      <div class="photo-frame">
+        <img
+          src="Nishant Kumar Tripathi.jpeg"
+          alt="Portrait of Nishant Kumar Tripathi"
+          onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,' + encodeURIComponent(`
+            <svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;300&quot; height=&quot;300&quot;>
+              <defs>
+                <linearGradient id=&quot;g&quot; x1=&quot;0%&quot; y1=&quot;0%&quot; x2=&quot;100%&quot; y2=&quot;100%&quot;>
+                  <stop offset=&quot;0%&quot; stop-color=&quot;%234FD8FF&quot;/>
+                  <stop offset=&quot;100%&quot; stop-color=&quot;%233B82F6&quot;/>
+                </linearGradient>
+              </defs>
+              <rect width=&quot;300&quot; height=&quot;300&quot; fill=&quot;%230D1533&quot;/>
+              <circle cx=&quot;150&quot; cy=&quot;150&quot; r=&quot;150&quot; fill=&quot;url(%23g)&quot; opacity=&quot;0.18&quot;/>
+              <text x=&quot;50%&quot; y=&quot;54%&quot; font-family=&quot;Space Grotesk, sans-serif&quot; font-size=&quot;96&quot; fill=&quot;%23E7EEFF&quot; text-anchor=&quot;middle&quot;>JC</text>
+            </svg>
+          `)"
+        >
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-head"><h2>About</h2><span class="section-tag">01 / who's asking</span></div>
+    <div class="about-grid">
+      <div>
+        <p>My name is <strong>Nishant Kumar Tripathi</strong>, and I am currently pursuing the final year of my Bachelor of Technology (B.Tech) degree. I am passionate about Data Analytics and focused on building a career as a Data Analyst.</p>
+        <p>I enjoy working with data to uncover meaningful insights and solve real-world problems. I am continuously improving my skills in Excel, SQL, Python, Power BI, and data visualization to become a proficient data professional.</p>
+        <p>I am a quick learner, dedicated, and eager to contribute to data-driven decision-making in a professional environment.</p>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">4+</div><div class="l">DASHBOARDS SHIPPED</div></div>
+        <div class="stat"><div class="n">5</div><div class="l">VIRTUAL INTERNSHIP</div></div>
+        <div class="stat"><div class="n">5</div><div class="l">TEAMS SUPPORTED</div></div>
+        <div class="stat"><div class="n">Fresher</div><div class="l">IN ANALYTICS</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-head"><h2>Skills</h2><span class="section-tag">02 / schema</span></div>
+    <table class="schema">
+      <thead><tr><th>column</th><th>type</th><th>description</th></tr></thead>
+      <tbody>
+        <tr><td class="col-name">sql</td><td class="col-type">expert</td>
+          <td class="col-desc">Window functions, CTEs, query optimization across Postgres, Snowflake, BigQuery.
+            <div class="bar-wrap"><div class="bar-fill" style="width:95%"></div></div></td></tr>
+        <tr><td class="col-name">python</td><td class="col-type">advanced</td>
+          <td class="col-desc">pandas, numpy, scripting for ETL and ad-hoc analysis.
+            <div class="bar-wrap"><div class="bar-fill" style="width:80%"></div></div></td></tr>
+        <tr><td class="col-name">visualization</td><td class="col-type">expert</td>
+          <td class="col-desc">Power BI, and hand-built dashboards for exec and team use.
+            <div class="bar-wrap"><div class="bar-fill" style="width:90%"></div></div></td></tr>
+        <tr><td class="col-name">experimentation</td><td class="col-type">advanced</td>
+          <td class="col-desc">A/B test design, power analysis, and results readouts.
+            <div class="bar-wrap"><div class="bar-fill" style="width:75%"></div></div></td></tr>
+        <tr><td class="col-name">data modeling</td><td class="col-type">advanced</td>
+          <td class="col-desc">dbt pipelines, star schemas, metric layer design.
+            <div class="bar-wrap"><div class="bar-fill" style="width:78%"></div></div></td></tr>
+        <tr><td class="col-name">communication</td><td class="col-type">expert</td>
+          <td class="col-desc">Translating findings into decisions for non-technical stakeholders.
+            <div class="bar-wrap"><div class="bar-fill" style="width:92%"></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="projects">
+    <div class="section-head"><h2>Projects</h2><span class="section-tag">03 / case studies</span></div>
+    <div class="projects">
+      <div class="card">
+        <h3>MobileSales Analysis Dashboard</h3>
+        <div class="stack">Power BI, MS EXCEL</div>
+        <p class="desc">The Mobile Sales Analysis Dashboard project was conceptualized to serve as a robust, scalable
+                        prototype for retail analytics. The primary objectives are multi-faceted, focusing on both technical
+                        implementation and business value generation.</p>
+        <svg viewBox="0 0 300 64" preserveAspectRatio="none"><polyline points="0,50 30,46 60,48 90,38 120,40 150,28 180,30 210,18 240,20 270,10 300,12" fill="none" stroke="#4FD8FF" stroke-width="2"/></svg>
+        <span class="metric">↓ 18% Analysis in target segment</span>
+        <a href="#" class="card-link">Read the case study <span>→</span></a>
+      </div>
+      <div class="card">
+        <h3>Phonepe Analysis Dashboard</h3>
+        <div class="stack">Power BI, MS EXCEL</div>
+        <p class="desc">This project is a Data Analysis Dashboard built to track, visualize, and analyze transactional and user behavior data for a PhonePe-like digital wallet platform. It consolidates high-level financial metrics, user demographics, and temporal patterns into a single interactive view to help stakeholders make data-driven decisions.</p>
+        <svg viewBox="0 0 300 64" preserveAspectRatio="none"><rect x="10" y="30" width="26" height="26" fill="#3B82F6"/><rect x="50" y="18" width="26" height="38" fill="#3B82F6"/><rect x="90" y="8" width="26" height="48" fill="#4FD8FF"/><rect x="130" y="24" width="26" height="32" fill="#3B82F6"/></svg>
+        <span class="metric">User Distribution Percentage (By Age Segment)</span>
+        <a href="#" class="card-link">Read the case study <span>→</span></a>
+      </div>
+      <div class="card">
+        <h3>E-Commerce project</h3>
+        <div class="stack">SQL</div>
+        <p class="desc">To build a secure, efficient relational database that seamlessly manages the entire online shopping lifecycle—from organizing product catalogs and tracking real-time inventory to processing secure user transactions and fulfilling orders.</p>
+        <svg viewBox="0 0 300 64" preserveAspectRatio="none"><polyline points="0,40 30,42 60,30 90,34 120,20 150,24 180,14 210,18 240,8 270,12 300,6" fill="none" stroke="#3B82F6" stroke-width="2"/></svg>
+        <span class="metric">100% Manual entry</span>
+        <a href="#" class="card-link">Read the case study <span>→</span></a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="section-head"><h2>Experience</h2><span class="section-tag">04 / timeline</span></div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">2026 — Present</div><div class="tl-role">Data Analyst <span>· InAmigos Foundation</span></div><div class="tl-desc">Real world Projects </div></div>
+      <div class="tl-item"><div class="tl-date">2025-2026</div><div class="tl-role">Data Analyst <span>· Virtual Internship</span></div><div class="tl-desc">Built the first customer analytics dashboards and led a MobileSales analysis adopted company-wide.</div></div>
+      <div class="tl-item"><div class="tl-date">2023-2027</div><div class="tl-role">B.TECH Electronics & Computer Science <span>· State University</span></div><div class="tl-desc">Focused coursework in hand-built, experimental design, and databases.</div></div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact">
+      <div>
+        <h2>Let's talk data.</h2>
+        <p class="lede">Open to Data analyst roles, and happy to talk through any of the projects above in more detail.</p>
+        <a href="https://drive.google.com/file/d/1I0FngAR-uHWtKZyxakiVGXe69PCOeB2x/view?usp=sharing" class="btn-primary">Download résumé ↓</a>
+      </div>
+      <div class="contact-list">
+        <a href="mailto:nishantshashwat45@gmail.com">email <span>nishantshashwat45@gmail.com</span></a>
+        <a href="https://www.linkedin.com/in/nishant-kumar-tripathi/">linkedin <span>→</span></a>
+        <a href="https://github.com/nishant-1718">github <span>→</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Nishant Kumar Tripathi</span>
+  <span>built with sql, coffee, and one too many ctes</span>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- Sparkle background (fixed, full page) ---------------- */
+  (function(){
+    const canvas = document.getElementById('sparkle-bg');
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.z = 18;
+
+    const COUNT = window.innerWidth < 700 ? 400 : 900;
+    const positions = new Float32Array(COUNT * 3);
+    const sizes = new Float32Array(COUNT);
+    const phases = new Float32Array(COUNT);
+
+    for (let i = 0; i < COUNT; i++){
+      positions[i*3+0] = (Math.random() - 0.5) * 44;
+      positions[i*3+1] = (Math.random() - 0.5) * 30;
+      positions[i*3+2] = (Math.random() - 0.5) * 34;
+      sizes[i] = Math.random() * 2.2 + 0.6;
+      phases[i] = Math.random() * Math.PI * 2;
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+    geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 }, uColor: { value: new THREE.Color(0x4fd8ff) } },
+      vertexShader: `
+        attribute float aSize;
+        attribute float aPhase;
+        uniform float uTime;
+        varying float vTwinkle;
+        void main(){
+          vTwinkle = 0.35 + 0.65 * sin(uTime * 1.4 + aPhase);
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = aSize * vTwinkle * (240.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor;
+        varying float vTwinkle;
+        void main(){
+          float d = length(gl_PointCoord - vec2(0.5));
+          float alpha = smoothstep(0.5, 0.0, d) * vTwinkle;
+          gl_FragColor = vec4(uColor, alpha);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5);
+      mouseY = (e.clientY / window.innerHeight - 0.5);
+    });
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const clock = new THREE.Clock();
+    function animate(){
+      requestAnimationFrame(animate);
+      mat.uniforms.uTime.value = clock.getElapsedTime();
+      points.rotation.y += 0.0006;
+      points.rotation.x += 0.0002;
+      camera.position.x += (mouseX * 3 - camera.position.x) * 0.02;
+      camera.position.y += (-mouseY * 2 - camera.position.y) * 0.02;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion){
+      mat.uniforms.uTime.value = 1.0;
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
+  })();
+
+  /* ---------------- Hero 3D wireframe halo ---------------- */
+  (function(){
+    const container = document.getElementById('hero-3d');
+    const width = container.clientWidth, height = container.clientHeight;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 100);
+    camera.position.z = 5;
+
+    const outerGeo = new THREE.IcosahedronGeometry(2.0, 1);
+    const outerMat = new THREE.MeshBasicMaterial({ color: 0x4fd8ff, wireframe: true, transparent: true, opacity: 0.55 });
+    const outer = new THREE.Mesh(outerGeo, outerMat);
+    scene.add(outer);
+
+    const innerGeo = new THREE.IcosahedronGeometry(1.55, 0);
+    const innerMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.35 });
+    const inner = new THREE.Mesh(innerGeo, innerMat);
+    scene.add(inner);
+
+    function onResize(){
+      const w = container.clientWidth, h = container.clientHeight;
+      camera.aspect = w/h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', onResize);
+
+    function animate(){
+      requestAnimationFrame(animate);
+      outer.rotation.y += 0.004;
+      outer.rotation.x += 0.0015;
+      inner.rotation.y -= 0.0025;
+      inner.rotation.x -= 0.002;
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion){
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
+  })();
+
+  /* ---------------- Scroll-reveal ---------------- */
+  const revealEls = document.querySelectorAll('.card, .tl-item, .stat');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  revealEls.forEach(el => {
+    el.style.opacity = 0;
+    el.style.transform = 'translateY(14px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    io.observe(el);
+  });
+
+  if (reduceMotion){
+    revealEls.forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+  }
+</script>
+
+</body>
+</html>
